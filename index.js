@@ -28,11 +28,11 @@ async function nearbySearch() {
       radius: 500,
     },
     // optional parameters
-    includedPrimaryTypes: ["restaurant"],
+    includedPrimaryTypes: ["hospital"],
     maxResultCount: 5,
     rankPreference: SearchNearbyRankPreference.POPULARITY,
-    language: "en-US",
-    region: "us",
+    language: "ko",
+    region: "kr",
   };
   //@ts-ignore
   const { places } = await Place.searchNearby(request);
