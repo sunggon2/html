@@ -7,7 +7,7 @@ async function initMap() {
   map = new Map(document.getElementById("map"), {
     center: center,
     zoom: 11,
-    mapId: "DEMO_MAP_ID",
+    mapId: "395b724bebd42622",
   });
   nearbySearch();
 }
