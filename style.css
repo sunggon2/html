@@ -1,0 +1,5 @@
+/* style.css */
+#map {
+  height: 400px; /* 지도의 높이 */
+  width: 100%;   /* 지도의 너비 */
+}

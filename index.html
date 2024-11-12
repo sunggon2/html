@@ -1,232 +1,37 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>향상된 타이머</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-            margin: 0;
-            transition: background-color 0.5s;
-        }
-
-        .timer-container {
-            background: #ffffff;
-            padding: 40px 60px;
-            border-radius: 20px;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 2em;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        #timerDisplay {
-            font-size: 3em;
-            color: #333;
-            margin: 20px 0;
-            font-weight: bold;
-        }
-
-        input[type="number"] {
-            width: 60px;
-            padding: 10px;
-            font-size: 1.2em;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            text-align: center;
-            margin: 5px;
-            box-sizing: border-box;
-            transition: border-color 0.3s;
-        }
-
-        input[type="number"]:focus {
-            outline: none;
-            border-color: #66afe9;
-        }
-
-        button {
-            padding: 12px 20px;
-            margin: 10px 5px;
-            font-size: 1.1em;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        button:hover {
-            transform: scale(1.05);
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .start-btn {
-            background-color: #28a745;
-            color: #fff;
-        }
-
-        .pause-btn {
-            background-color: #ffc107;
-            color: #fff;
-        }
-
-        .resume-btn {
-            background-color: #007bff;
-            color: #fff;
-        }
-
-        .reset-btn {
-            background-color: #dc3545;
-            color: #fff;
-        }
-
-        .start-btn:hover {
-            background-color: #218838;
-        }
-
-        .pause-btn:hover {
-            background-color: #e0a800;
-        }
-
-        .resume-btn:hover {
-            background-color: #0056b3;
-        }
-
-        .reset-btn:hover {
-            background-color: #c82333;
-        }
-
-        /* 타이머가 종료되었을 때 스타일 */
-        body.time-up {
-            background-color: #FF6347; /* 빨간 배경 */
-        }
-
-        .timer-container.time-up {
-            background: #ffe6e6;
-            border: 2px solid #ff0000;
-        }
-
-        #timerDisplay.time-up {
-            color: #ff0000;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple Map</title>
+  <link rel="stylesheet" type="text/css" href="./style.css" />
+  <script type="module" src="./index.js"></script>
 </head>
 <body>
-    <div class="timer-container">
-        <h1>타이머 설정</h1>
-        <label>분: <input type="number" id="minuteInput" placeholder="0" min="0" step="1"/></label>
-         <label>초: <input type="number" id="secondInput" placeholder="0" min="0" step="1"/></label>
-        <br>
-        <button class="start-btn">타이머 시작</button>
-        <button class="pause-btn">일시 정지</button>
-        <button class="resume-btn">재시작</button>
-        <button class="reset-btn">리셋</button>
-        <div id="timerDisplay">남은 시간: 00:00</div>
-    </div>
-    <audio id="endSound" src="finish.mp3"></audio>
+  <div id="map"></div>
 
-    <script>
-        let timerInterval;
-        let totalSeconds = 0;
-        let remainingSeconds = 0;
-        let isPaused = false;
-
-        // 버튼 요소 가져오기
-        const startButton = document.querySelector(".start-btn");
-        const pauseButton = document.querySelector(".pause-btn");
-        const resumeButton = document.querySelector(".resume-btn");
-        const resetButton = document.querySelector(".reset-btn");
-
-       // 각 버튼에 이벤트 리스너 추가
-       startButton.addEventListener("click", startTimer);
-       pauseButton.addEventListener("click", pauseTimer);
-       resumeButton.addEventListener("click", resumeTimer);
-       resetButton.addEventListener("click", resetTimer);
-
-        // 타이머 시작 함수
-        function startTimer() {
-            clearInterval(timerInterval);
-            isPaused = false;
-
-            const minutes = document.getElementById("minuteInput").value;
-            const seconds = document.getElementById("secondInput").value;
-
-            // 유효한 숫자가 입력되었는지 확인 (음수 및 0 처리)
-            if (minutes === 0 && seconds === 0) {
-                alert("유효한 시간을 입력하세요! 분과 초는 0보다 커야 합니다.");
-                return;
-            }
-
-            totalSeconds = minutes * 60 + seconds;
-            remainingSeconds = totalSeconds;
-            updateDisplay();
-            document.body.classList.remove("time-up");
-            document.querySelector(".timer-container").classList.remove("time-up");
-
-            // 타이머 시작
-            timerInterval = setInterval(() => {
-                if (!isPaused) {
-                    remainingSeconds--;
-                    updateDisplay();
-                    
-                    if (remainingSeconds <= 0) {
-                        clearInterval(timerInterval);
-                        playEndSound();
-                        document.getElementById("timerDisplay").innerText = "시간이 다 되었습니다!";
-                        document.body.classList.add("time-up");
-                        document.querySelector(".timer-container").classList.add("time-up");
-                    }
-                }
-            }, 1000);
-        }
-
-        // 타이머 일시 정지 함수
-        function pauseTimer() {
-            isPaused = true;
-        }
-
-        // 타이머 재시작 함수
-        function resumeTimer() {
-            isPaused = false;
-        }
-
-        // 타이머 리셋 함수
-        function resetTimer() {
-            clearInterval(timerInterval);
-            totalSeconds = 0;
-            remainingSeconds = 0;
-            isPaused = false;
-            document.getElementById("timerDisplay").innerText = "남은 시간: 00:00";
-            document.getElementById("minuteInput").value = "";
-            document.getElementById("secondInput").value = "";
-            document.body.classList.remove("time-up");
-            document.querySelector(".timer-container").classList.remove("time-up");
-        }
-
-        // 화면에 시간 업데이트 함수
-        function updateDisplay() {
-            const displayMinutes = Math.floor(remainingSeconds / 60);
-            const displaySeconds = remainingSeconds % 60;
-            document.getElementById("timerDisplay").innerText = `남은 시간: ${displayMinutes.toString().padStart(2, '0')}:${displaySeconds.toString().padStart(2, '0')}`;
-        }
-
-        // 종료음 재생 함수
-        function playEndSound() {
-            const endSound = document.getElementById("endSound");
-            endSound.play();
-        }
-    </script>
+  <!-- Google Maps API 로드 -->
+  <script>
+    (g => {
+      var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window;
+      b = b[c] || (b[c] = {});
+      var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams,
+        u = () => h || (h = new Promise(async (f, n) => {
+          await (a = m.createElement("script"));
+          e.set("libraries", [...r] + "");
+          for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+          e.set("callback", c + ".maps." + q);
+          a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+          d[q] = f;
+          a.onerror = () => h = n(Error(p + " could not load."));
+          a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+          m.head.append(a);
+        }));
+      d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n))
+    })({
+      key: "AIzaSyC5SHxpSEBZMPA_HMzGeRIcqZWArVk9QQU", // 실제 API 키로 교체
+      v: "weekly"
+    });
+  </script>
 </body>
 </html>
