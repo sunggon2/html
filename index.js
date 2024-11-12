@@ -2,7 +2,7 @@ let map;
 
 async function initMap() {
   const { Map, InfoWindow } = await google.maps.importLibrary("maps");
-  let center = new google.maps.LatLng(52.369358, 4.889258);
+  let center = new google.maps.LatLng(35.218964, 129.019024);
 
   map = new Map(document.getElementById("map"), {
     center: center,
