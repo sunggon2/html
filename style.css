@@ -1,5 +1,17 @@
-/* style.css */
-#map {
-  height: 400px; /* 지도의 높이 */
-  width: 100%;   /* 지도의 너비 */
+/* 
+ * Always set the map height explicitly to define the size of the div element
+ * that contains the map. 
+ */
+ #map {
+  height: 100%;
+}
+
+/* 
+ * Optional: Makes the sample page fill the window. 
+ */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
